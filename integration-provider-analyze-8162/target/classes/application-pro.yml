@@ -1,0 +1,24 @@
+spring:
+  datasource:
+    #Mysql
+    type: com.alibaba.druid.pool.DruidDataSource
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://10.141.180.249:3306/green_energy?useUnicode=true&characterEncoding=utf-8&useSSL=false&allowMultiQueries=true&serverTimezone=GMT%2B8
+    username: hanlin
+    password: Dzgdgs@123456
+  redis:
+    database: 0 # Redis数据库索引（默认为0）
+    host: 127.0.0.1  #Redis服务器地址
+    port: 6379 # Redis服务器连接端口
+    password: Dzgdgs@123456    # Redis服务器连接密码（默认为空）
+    jedis:
+      pool:
+        max-active: 20
+        max-idle: 20
+        min-idle: 5
+        max-wait: 1000
+        timeout: 5000 # 连接超时时间（毫秒）
+
+
+logging:
+  config: classpath:logback-spring-pro.xml

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/hl-green-energy-service.iml" filepath="$PROJECT_DIR$/hl-green-energy-service.iml" />
+      <module fileurl="file://$PROJECT_DIR$/integration-eureka-7001/integration-eureka-7001.iml" filepath="$PROJECT_DIR$/integration-eureka-7001/integration-eureka-7001.iml" />
+      <module fileurl="file://$PROJECT_DIR$/integration-provider-analyze-8162/integration-provider-analyze-8162.iml" filepath="$PROJECT_DIR$/integration-provider-analyze-8162/integration-provider-analyze-8162.iml" />
+      <module fileurl="file://$PROJECT_DIR$/integration-zuul-9527/integration-zuul-9527.iml" filepath="$PROJECT_DIR$/integration-zuul-9527/integration-zuul-9527.iml" />
+    </modules>
+  </component>
+</project>

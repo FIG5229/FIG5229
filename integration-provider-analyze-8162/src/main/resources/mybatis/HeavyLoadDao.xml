@@ -1,0 +1,252 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hl.analyze.dao.HeavyLoadDao">
+    <resultMap autoMapping="true" id="BaseResultMap" type="com.hl.analyze.entity.po.HeavyLoad">
+        <!--@mbg.generated-->
+        <!--@Table heavy_load-->
+        <id column="id" jdbcType="INTEGER" property="id"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+        <!--@mbg.generated-->
+        id, transformer_id, transformer_name, max_load_rate, avg_load_rate, company, company_code, company_code,
+        rated_capacity,
+        device_status, network_type, in_use_date, `year`, city_company, county_company, max_current,
+        match_min_capacity, matching_most_suitable_capacity
+    </sql>
+    <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+        <!--@mbg.generated-->
+        select
+        <include refid="Base_Column_List"/>
+        from heavy_load
+        where id = #{id,jdbcType=INTEGER}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+        <!--@mbg.generated-->
+        delete
+        from heavy_load
+        where id = #{id,jdbcType=INTEGER}
+    </delete>
+    <insert id="insert" keyColumn="id" keyProperty="id" parameterType="com.hl.analyze.entity.po.HeavyLoad"
+            useGeneratedKeys="true">
+        <!--@mbg.generated-->
+        insert into heavy_load (transformer_id, transformer_name, max_load_rate,
+                                    avg_load_rate, company, company_code, rated_capacity,
+                                    device_status, network_type, in_use_date,
+                                    `year`, city_company, county_company,
+                                    max_current, match_min_capacity, matching_most_suitable_capacity)
+        values (#{transformerId,jdbcType=VARCHAR}, #{transformerName,jdbcType=VARCHAR}, #{maxLoadRate,jdbcType=DECIMAL},
+                #{avgLoadRate,jdbcType=DECIMAL}, #{company,jdbcType=VARCHAR}, #{companyCode,jdbcType=VARCHAR},
+                #{ratedCapacity,jdbcType=DECIMAL},
+                #{deviceStatus,jdbcType=TINYINT}, #{networkType,jdbcType=TINYINT}, #{inUseDate,jdbcType=DATE},
+                #{year,jdbcType=VARCHAR}, #{cityCompany,jdbcType=VARCHAR}, #{countyCompany,jdbcType=VARCHAR},
+                #{maxCurrent,jdbcType=DECIMAL}, #{matchMinCapacity,jdbcType=DECIMAL},
+                #{matchingMostSuitableCapacity,jdbcType=DECIMAL})
+    </insert>
+    <insert id="insertSelective" keyColumn="id" keyProperty="id" parameterType="com.hl.analyze.entity.po.HeavyLoad"
+            useGeneratedKeys="true">
+        <!--@mbg.generated-->
+        insert into heavy_load
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="transformerId != null">
+                transformer_id,
+            </if>
+            <if test="transformerName != null">
+                transformer_name,
+            </if>
+            <if test="maxLoadRate != null">
+                max_load_rate,
+            </if>
+            <if test="avgLoadRate != null">
+                avg_load_rate,
+            </if>
+            <if test="company != null">
+                company,
+            </if>
+            <if test="companyCode != null">
+                company_code,
+            </if>
+            <if test="ratedCapacity != null">
+                rated_capacity,
+            </if>
+            <if test="deviceStatus != null">
+                device_status,
+            </if>
+            <if test="networkType != null">
+                network_type,
+            </if>
+            <if test="inUseDate != null">
+                in_use_date,
+            </if>
+            <if test="year != null">
+                `year`,
+            </if>
+            <if test="cityCompany != null">
+                city_company,
+            </if>
+            <if test="countyCompany != null">
+                county_company,
+            </if>
+            <if test="maxCurrent != null">
+                max_current,
+            </if>
+            <if test="matchMinCapacity != null">
+                match_min_capacity,
+            </if>
+            <if test="matchingMostSuitableCapacity != null">
+                matching_most_suitable_capacity
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="transformerId != null">
+                #{transformerId,jdbcType=VARCHAR},
+            </if>
+            <if test="transformerName != null">
+                #{transformerName,jdbcType=VARCHAR},
+            </if>
+            <if test="maxLoadRate != null">
+                #{maxLoadRate,jdbcType=DECIMAL},
+            </if>
+            <if test="avgLoadRate != null">
+                #{avgLoadRate,jdbcType=DECIMAL},
+            </if>
+            <if test="company != null">
+                #{company,jdbcType=VARCHAR},
+            </if>
+            <if test="companyCode != null">
+                #{companyCode,jdbcType=VARCHAR},
+            </if>
+            <if test="ratedCapacity != null">
+                #{ratedCapacity,jdbcType=DECIMAL},
+            </if>
+            <if test="deviceStatus != null">
+                #{deviceStatus,jdbcType=TINYINT},
+            </if>
+            <if test="networkType != null">
+                #{networkType,jdbcType=TINYINT},
+            </if>
+            <if test="inUseDate != null">
+                #{inUseDate,jdbcType=DATE},
+            </if>
+            <if test="year != null">
+                #{year,jdbcType=VARCHAR},
+            </if>
+            <if test="cityCompany != null">
+                #{cityCompany,jdbcType=VARCHAR},
+            </if>
+            <if test="countyCompany != null">
+                #{countyCompany,jdbcType=VARCHAR},
+            </if>
+            <if test="maxCurrent != null">
+                #{maxCurrent,jdbcType=DECIMAL},
+            </if>
+            <if test="matchMinCapacity != null">
+                #{matchMinCapacity,jdbcType=DECIMAL},
+            </if>
+            <if test="matchingMostSuitableCapacity != null">
+                #{matchingMostSuitableCapacity,jdbcType=DECIMAL}
+            </if>
+        </trim>
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.hl.analyze.entity.po.HeavyLoad">
+        <!--@mbg.generated-->
+        update heavy_load
+        <set>
+            <if test="transformerId != null">
+                transformer_id = #{transformerId,jdbcType=VARCHAR},
+            </if>
+            <if test="transformerName != null">
+                transformer_name = #{transformerName,jdbcType=VARCHAR},
+            </if>
+            <if test="maxLoadRate != null">
+                max_load_rate = #{maxLoadRate,jdbcType=DECIMAL},
+            </if>
+            <if test="avgLoadRate != null">
+                avg_load_rate = #{avgLoadRate,jdbcType=DECIMAL},
+            </if>
+            <if test="company != null">
+                company = #{company,jdbcType=VARCHAR},
+            </if>
+            <if test="companyCode != null">
+                company_code = #{companyCode,jdbcType=VARCHAR},
+            </if>
+            <if test="ratedCapacity != null">
+                rated_capacity = #{ratedCapacity,jdbcType=DECIMAL},
+            </if>
+            <if test="deviceStatus != null">
+                device_status = #{deviceStatus,jdbcType=TINYINT},
+            </if>
+            <if test="networkType != null">
+                network_type = #{networkType,jdbcType=TINYINT},
+            </if>
+            <if test="inUseDate != null">
+                in_use_date = #{inUseDate,jdbcType=DATE},
+            </if>
+            <if test="year != null">
+                `year` = #{year,jdbcType=VARCHAR},
+            </if>
+            <if test="cityCompany != null">
+                city_company = #{cityCompany,jdbcType=VARCHAR},
+            </if>
+            <if test="countyCompany != null">
+                county_company = #{countyCompany,jdbcType=VARCHAR},
+            </if>
+            <if test="maxCurrent != null">
+                max_current = #{maxCurrent,jdbcType=DECIMAL},
+            </if>
+            <if test="matchMinCapacity != null">
+                match_min_capacity = #{matchMinCapacity,jdbcType=DECIMAL},
+            </if>
+            <if test="matchingMostSuitableCapacity != null">
+                matching_most_suitable_capacity = #{matchingMostSuitableCapacity,jdbcType=DECIMAL}
+            </if>
+        </set>
+        where id = #{id,jdbcType=INTEGER}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.hl.analyze.entity.po.HeavyLoad">
+        <!--@mbg.generated-->
+        update heavy_load
+        set transformer_id                  = #{transformerId,jdbcType=VARCHAR},
+            transformer_name                = #{transformerName,jdbcType=VARCHAR},
+            max_load_rate                   = #{maxLoadRate,jdbcType=DECIMAL},
+            avg_load_rate                   = #{avgLoadRate,jdbcType=DECIMAL},
+            company                         = #{company,jdbcType=VARCHAR},
+            company_code                    = #{companyCode,jdbcType=VARCHAR},
+            rated_capacity                  = #{ratedCapacity,jdbcType=DECIMAL},
+            device_status                   = #{deviceStatus,jdbcType=TINYINT},
+            network_type                    = #{networkType,jdbcType=TINYINT},
+            in_use_date                     = #{inUseDate,jdbcType=DATE},
+            `year`                          = #{year,jdbcType=VARCHAR},
+            city_company                    = #{cityCompany,jdbcType=VARCHAR},
+            county_company                  = #{countyCompany,jdbcType=VARCHAR},
+            max_current                     = #{maxCurrent,jdbcType=DECIMAL},
+            match_min_capacity              = #{matchMinCapacity,jdbcType=DECIMAL},
+            matching_most_suitable_capacity = #{matchingMostSuitableCapacity,jdbcType=DECIMAL}
+        where id = #{id,jdbcType=INTEGER}
+    </update>
+
+    <select id="selectList" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM heavy_load
+        <where>
+            <if test="id != null">
+                id = #{id,jdbcType=INTEGER}
+            </if>
+            <if test="transformerId != null and transformerId != ''">
+                AND transformer_id = #{transformerId,jdbcType=VARCHAR}
+            </if>
+            <if test="transformerName != null and transformerName != ''">
+                AND transformer_name LIKE CONCAT('%', #{transformerName,jdbcType=VARCHAR}, '%')
+            </if>
+            <if test="company != null and company != ''">
+                AND company LIKE CONCAT('%', #{company,jdbcType=VARCHAR}, '%')
+            </if>
+            <if test="countyCompany != null and countyCompany != ''">
+                AND county_company LIKE CONCAT('%', #{countyCompany,jdbcType=VARCHAR}, '%')
+            </if>
+            <if test="year != null and year != ''">
+                AND year = #{year,jdbcType=VARCHAR}
+            </if>
+        </where>
+    </select>
+</mapper>

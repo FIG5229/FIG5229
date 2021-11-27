@@ -1,0 +1,120 @@
+server:
+  port: 9527
+
+mybatis:
+  config-location: classpath:mybatis/mybatis.cfg.xml    #mybatis配置文件所在路径
+  type-aliases-package: com.integration.entity          #所有entity别名类所在包
+  mapper-locations:
+    - classpath:mybatis/mapper/**/*.xml                 #mapper映射文件
+
+spring:
+  application:
+    name: springcloud-zuul
+  servlet:
+    multipart:
+      max-file-size: 10MB         # 文件上传大小限制
+      max-request-size: 15MB      # 请求数据大小限制
+  datasource:
+    type: com.alibaba.druid.pool.DruidDataSource
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    mysql-ip: 127.0.0.1
+    mysql-port: 3306
+    mysql-dbname: green_energy
+    url: jdbc:mysql://${spring.datasource.mysql-ip}:${spring.datasource.mysql-port}/${spring.datasource.mysql-dbname}?useUnicode=true&characterEncoding=utf-8&useSSL=false&serverTimezone=Asia/Shanghai&zeroDateTimeBehavior=CONVERT_TO_NULL #&allowMultiQueries=true
+    username: root
+    password: hlkj
+    dbcp2:
+      min-idle: 50               #数据库连接池的最小维持连接数
+      initial-size: 50           #初始化连接数
+      max-total: 50              #最大连接数
+      max-wait-millis: 200      #等待连接获取的最大超时时间
+      #      remove-abandoned: true
+      #        remove-abandoned-timeout: 20
+      test-on-borrow: true
+      test-on-return: true
+      test-while-idle: true
+      validation-query: "SELECT 1"
+  redis:
+    database: 0 # Redis数据库索引（默认为0）
+    host: 192.168.10.97
+    #Redis服务器地址
+    port: 6379 # Redis服务器连接端口
+    password:     # Redis服务器连接密码（默认为空）
+    jedis:
+      pool:
+        max-active: 20
+        max-idle: 20
+        min-idle: 5
+        max-wait: 1000
+        timeout: 5000 # 连接超时时间（毫秒）
+
+logging:
+   config: classpath:logback-spring.xml
+
+eureka:
+  client:   #客户端注册金eureka服务列表内
+    service-url:
+      defaultZone: http://localhost:7001/eureka/ #,http://eureka7002.com:7002/eureka/,http://eureka7003.com:7003/eureka/ #http://localhost:7001/eureka
+  instance:
+    instance-id: springcloud-9527.com       #服务名称的修改
+    prefer-ip-address: true             #访问路径可以显示IP地址
+
+
+
+zuul:
+  #解决上传文件乱码问题，但是加上又有别的问题，不知道怎么办，就先注释了
+  #servlet-path: /
+  sensitiveHeaders: "*"
+  host:
+    connect-timeout-millis: 10000000
+    socket-timeout-millis: 60000000
+  semaphore:
+    max-semaphores: 6000
+  # prefix: /hlkjDz
+  ignored-services: "*"       #此处写微服务名称代表只隐藏此微服务路径
+  routes:
+    # app项目
+    greenEnergy-8162:
+      path: /greenEnergy/**
+      serviceId: greenEnergy-8162
+
+audience:
+  clientId: 098f6bcd4621d373cade4e832627b4f6
+  base64Secret: MDk4ZjZiY2Q0NjIxZDM3M2NhZGU0ZTgzMjYyN2I0ZjY=
+  name: restapiuser
+  expiresSecond: 172800
+  dfilter: 1    #0开启过滤功能   1关闭过滤功能
+
+management:
+  health:
+    elasticsearch:
+      enabled: false
+
+info:
+  app.name: springcloud
+  company.name: hlkj.com
+  build.artifactId: $project.artifactId$
+  build.version: $project.version$
+
+
+ribbon: #ribbon负载均衡参数配置
+  ReadTimeout: 60000000
+  ConnectTimeout: 60000000
+  MaxAutoRetries: 2
+  MaxAutoRetriesNextServer: 2
+
+
+hystrix:
+  command:
+    default:
+      execution:
+        isolation:
+          thread:
+            timeoutInMilliseconds: 60000000
+#      circuitBreaker:
+#        requestVolumeThreshold: 10 # 触发熔断超时次数 10次
+#        sleepWindowInMilliseconds: 600000 # 熔断多久后尝试放行一次请求
+#        errorThresholdPercentage: 50 # 失败率达到多少后触发熔断
+#      metrics:
+#        rollingStats:
+#          timeInMilliseconds: 60000 # 熔断多长时间后，尝试放一次请求进来，默认5秒

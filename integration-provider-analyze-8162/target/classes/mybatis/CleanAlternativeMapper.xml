@@ -1,0 +1,433 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.hl.analyze.dao.CleanAlternativeDao">
+
+
+    <select id="getPhotovoltaicPowerStation" resultType="com.hl.analyze.entity.po.PowerStation">
+        select id,
+               power_station_name powerStationName,
+               actual_capacity    protocolCapacity,
+               city,
+               county,
+               city_code          cityCode,
+               county_code        countyCode,
+               voltage_classes    voltageClasses,
+               actual_capacity    actualCapacity
+        from photovoltaic_power_station
+    </select>
+
+    <select id="getWindPowerPlant" resultType="com.hl.analyze.entity.po.PowerStation">
+        select id,
+               wind_power_plant_name powerStationName,
+               actual_capacity       protocolCapacity,
+
+               city,
+               county,
+               city_code             cityCode,
+               county_code           countyCode,
+               voltage_classes       voltageClasses
+        from wind_power_plant
+    </select>
+    <select id="getDistributedPhotovoltaic" resultType="com.hl.analyze.entity.po.DistributedPhotovoltaic">
+        select id,
+        door_no doorNo,
+        province,
+        city,
+        city_code cityCode,
+        county countyCode,
+        username,
+        generating_capacity generatingCapacity,
+        voltage_classes voltageClasses,
+        county,
+        geographic_position geographicPosition,
+        courts_name courtsName,
+        courts_number courtsNumber,
+        longitude,
+        latitude,
+        village,
+        circuit,
+        generatrix
+        from distributed_photovoltaic
+        <where>
+            <trim prefixOverrides="and">
+                <if test="cityCode != null and cityCode !=''">and city_code = #{cityCode}</if>
+                <if test="countyCode != null and countyCode !=''">and county_code = #{countyCode}</if>
+            </trim>
+        </where>
+    </select>
+
+    <select id="getPhotovoltaicSubsidies" resultType="com.hl.analyze.entity.po.PhotovoltaicSubsidies">
+        select id,
+        company_name companyName,
+        door_no doorNo,
+        generating_capacity generatingCapacity,
+        release_date releaseDate,
+        accumulated_generating_capacity accumulatedGeneratingCapacity,
+        city,
+        county,
+        city_code cityCode,
+        county countyCode,
+        management_unit_name managementUnitName,
+        contract_capacity contractCapacity
+        from photovoltaic_subsidies
+        <where>
+            <trim prefixOverrides="and">
+                <if test="cityCode != null and cityCode !=''">and city_code = #{cityCode}</if>
+                <if test="countyCode != null and countyCode !=''">and county_code = #{countyCode}</if>
+                <if test="managementUnitName != null and managementUnitName !=''">
+                    and management_unit_name = #{managementUnitName}
+                </if>
+                <if test="releaseDate != null and releaseDate !=''">and release_date = #{releaseDate}</if>
+            </trim>
+        </where>
+    </select>
+
+    <select id="getPhotovoltaicDefault" resultType="com.hl.analyze.entity.po.PhotovoltaicDefault">
+        select id, city, county, date, management_unit_name managementUnitName, door_no doorNo, status
+        from photovoltaic_default
+        <where>
+            <trim prefixOverrides="and">
+                <if test="cityCode != null and cityCode !=''">and city_code = #{cityCode}</if>
+                <if test="countyCode != null and countyCode !=''">and county_code = #{countyCode}</if>
+                <if test="managementUnitName != null and managementUnitName !=''">
+                    and management_unit_name = #{managementUnitName}
+                </if>
+                <if test="date != null and date !=''">and date = #{date}</if>
+            </trim>
+        </where>
+    </select>
+    <select id="getPhotovoltaicOverCapacity" resultType="com.hl.analyze.entity.po.PhotovoltaicOverCapacity">
+        select id,
+        capacity_load_ratio capacityLoadRatio,
+        city,
+        contract_capacity contractCapacity,
+        county,
+        city_code cityCode,
+        county countyCode,
+        date,
+        management_unit_name managementUnitName,
+        door_no doorNo
+        from photovoltaic_over_capacity
+        <where>
+            <trim prefixOverrides="and">
+                <if test="cityCode != null and cityCode !=''">and city_code = #{cityCode}</if>
+                <if test="countyCode != null and countyCode !=''">and county_code = #{countyCode}</if>
+                <if test="managementUnitName != null and managementUnitName !=''">
+                    and management_unit_name = #{managementUnitName}
+                </if>
+                <if test="date != null and date !=''">and date = #{date}</if>
+            </trim>
+        </where>
+    </select>
+
+    <select id="getInstalledCapacity" resultType="com.hl.analyze.entity.po.InstalledCapacity">
+        select id,
+        city,
+        county,
+        city_code cityCode,
+        county countyCode,
+        wind_power windPower,
+        photovoltaic_power_centralization photovoltaicPowerCentralization,
+        photovoltaic_power_distributed photovoltaicPowerDistributed,
+        subtotal subtotal,
+        biomass_machine biomassMachine,
+        new_energy newEnergy,
+        date
+        from installed_capacity
+        <where>
+            <trim prefixOverrides="and">
+                <if test="cityCode != null and cityCode !=''">and city_code = #{cityCode}</if>
+                <if test="countyCode != null and countyCode !=''">and county_code = #{countyCode}</if>
+                <if test="date != null and date !=''">and date = #{date}</if>
+            </trim>
+        </where>
+    </select>
+
+    <select id="getTotalCapacity" resultType="java.lang.String">
+        select max(new_energy)
+        from installed_capacity
+    </select>
+
+    <select id="getInstalledCapacityByCounty" resultType="java.lang.Double">
+        select max(new_energy)
+        from installed_capacity
+        where county_code = #{countyCode}
+          and date = #{date}
+    </select>
+
+    <select id="getPhotovoltaicPowerStationByCounty" resultType="java.lang.Integer">
+        select count(id)
+        from photovoltaic_power_station
+        where county_code = #{countyCode}
+    </select>
+    <select id="getWindPowerPlantByCounty" resultType="java.lang.Integer">
+        select count(id)
+        from wind_power_plant
+        where county_code = #{countyCode}
+    </select>
+    <select id="getDistributedPhotovoltaicByCounty" resultType="java.lang.Integer">
+        select count(id)
+        from distributed_photovoltaic
+        where county_code = #{countyCode}
+    </select>
+    <select id="getCityMenu" resultType="com.hl.analyze.entity.po.GetMenu">
+        select id,
+               city      menuName,
+               city_code code
+        from city_menu
+    </select>
+    <select id="getCountyMenu" resultType="com.hl.analyze.entity.po.GetMenu">
+        select id,
+               county      menuName,
+               county_code code
+        from county_menu
+        where city_code = #{cityCode}
+    </select>
+    <select id="qjtdCzlpgYhDetail" resultType="com.hl.analyze.entity.po.AssessUserDetails">
+        select id,
+        door_no doorNo,
+        geographic_position geographicPosition,
+        courts_name courtsName,
+        date,
+        capacity,
+        generating_capacity generatingCapacity
+        from assess_user_details
+        <where>
+            <if test="courtsName != null and courtsName !=''">and courts_name = #{courtsName}</if>
+        </where>
+    </select>
+    <select id="getVillagesMenu" resultType="com.hl.analyze.entity.po.GetMenu">
+        select id,
+               villages      menuName,
+               villages_code code
+        from villages_menu
+        where county_code = #{countyCode}
+    </select>
+    <select id="getCircuitMenu" resultType="com.hl.analyze.entity.po.GetMenu">
+        select id,
+               circuit      menuName,
+               circuit_code code
+        from circuit_menu
+        where villages_code = #{villagesCode}
+    </select>
+    <select id="qjtdCzlpgTqtzDetail" resultType="com.hl.analyze.entity.po.StandingBook">
+        select id,
+        city,
+        city_code cityCode,
+        county,
+        county_code countyCode,
+        villages,
+        villages_code villagesCode,
+        courts_name courtsName,
+        circuit,
+        circuit_code circuitCode,
+        capacity,
+        generating_capacity generatingCapacity,
+        date
+        from standing_book
+        <where>
+            <if test="time != null and time !=''">and date = #{time}</if>
+            <if test="circuitCode != null and circuitCode !=''">and circuit_code = #{circuitCode}</if>
+            <if test="circuitCode == null or circuitCode == ''  and villagesCode != null and villagesCode !=''">and
+                villages_code =
+                #{villagesCode}
+            </if>
+            <if test="circuitCode == null or circuitCode == '' and villagesCode == null or villagesCode == '' and countyCode != null and countyCode !=''">
+                and
+                county_code = #{countyCode}
+            </if>
+        </where>
+    </select>
+
+    <select id="getPowerSubstationMenu" resultType="com.hl.analyze.entity.po.GetMenu">
+        select id,
+               power_substation      menuName,
+               power_substation_code code
+        from power_substation_menu
+        where county_code = #{countyCode}
+    </select>
+
+    <select id="getFbsgfyhPointData" resultType="com.hl.analyze.entity.po.DistributedPhotovoltaic">
+        select id,door_no doorNo, latitude, longitude
+        from distributed_photovoltaic
+        <where>
+            <trim prefixOverrides="and">
+                <if test="cityCode != null and cityCode !=''">and city_code = #{cityCode}</if>
+                <if test="countyCode != null and countyCode !=''">and county_code = #{countyCode}</if>
+            </trim>
+        </where>
+    </select>
+
+    <select id="getGfdzPointData" resultType="com.hl.analyze.entity.po.DistributedPhotovoltaic">
+        select id id, latitude, longitude
+        from photovoltaic_power_station
+        <where>
+            <trim prefixOverrides="and">
+                <if test="cityCode != null and cityCode !=''">and city_code = #{cityCode}</if>
+                <if test="countyCode != null and countyCode !=''">and county_code = #{countyCode}</if>
+            </trim>
+        </where>
+    </select>
+    <select id="getFdcPointData" resultType="com.hl.analyze.entity.po.DistributedPhotovoltaic">
+        select id id, latitude, longitude
+        from wind_power_plant
+        <where>
+            <trim prefixOverrides="and">
+                <if test="cityCode != null and cityCode !=''">and city_code = #{cityCode}</if>
+                <if test="countyCode != null and countyCode !=''">and county_code = #{countyCode}</if>
+            </trim>
+        </where>
+    </select>
+    <select id="getZjrlGeoHeatmapData" resultType="com.hl.analyze.entity.po.InstalledCapacity">
+        select id,county_code countyCode,county,subtotal,wind_power windPower
+        from installed_capacity
+        <where>
+            <trim prefixOverrides="and">
+                date = #{date}
+                <if test="cityCode != null and cityCode !=''">and city_code = #{cityCode}</if>
+                <if test="countyCode != null and countyCode !=''">and county_code = #{countyCode}</if>
+            </trim>
+        </where>
+    </select>
+
+    <select id="getGfcrData" resultType="com.hl.analyze.entity.po.PhotovoltaicOverCapacity">
+        select id, capacity_load_ratio capacityLoadRatio, contract_capacity contractCapacity,size
+        from photovoltaic_over_capacity
+        <where>
+            <trim prefixOverrides="and">
+                <if test="cityCode != null and cityCode !=''">and city_code = #{cityCode}</if>
+                <if test="countyCode != null and countyCode !=''">and county_code = #{countyCode}</if>
+                <if test="selectDate != null and selectDate !=''">and date = #{selectDate}</if>
+            </trim>
+        </where>
+    </select>
+    <select id="getYdqsDetail" resultType="com.hl.analyze.entity.po.InstalledCapacity">
+        select id,
+               wind_power,
+               photovoltaic_power_centralization photovoltaicPowerCentralization,
+               photovoltaic_power_distributed    photovoltaicPowerDistributed,
+               subtotal,
+               biomass_machine                   biomassMachine,
+               new_energy                        newEnergy,
+               date
+        from installed_capacity_total
+        WHERE date between #{startTime} and #{endTime}
+    </select>
+
+    <select id="getFdycyhTableData" resultType="com.hl.analyze.entity.po.PhotovoltaicSubsidies">
+        select id,
+        company_name companyName,
+        door_no doorNo,
+        generating_capacity generatingCapacity,
+        release_date releaseDate,
+        accumulated_generating_capacity accumulatedGeneratingCapacity,
+        city,
+        city_code cityCode,
+        county,
+        county_code countyCode,
+        management_unit_name managementUnitName,
+        contract_capacity contractCapacity
+
+        from photovoltaic_subsidies
+        <where>
+            <trim prefixOverrides="and">
+                <if test="cityCode != null and cityCode !=''">and city_code = #{cityCode}</if>
+                <if test="countyCode != null and countyCode !=''">and county_code = #{countyCode}</if>
+                <if test=" selectMonth!= null and selectMonth !=''">and release_date = #{selectMonth}
+                </if>
+            </trim>
+        </where>
+    </select>
+
+    <select id="getCounty" resultType="java.lang.String">
+        select county
+        from county_menu
+        where county_code = #{countyCode}
+    </select>
+    <select id="getPhotovoltaic" resultType="com.hl.analyze.entity.po.InstalledCapacity">
+        select id,wind_power windPower,subtotal from installed_capacity_total
+        <where>
+            <if test="selectMonth != null and selectMonth !=''">and date = #{selectMonth}</if>
+        </where>
+    </select>
+    <select id="getPhotovoltaicPowerStationTotal" resultType="java.lang.Integer">
+        select count(*)
+        from photovoltaic_power_station
+        <where>
+            <if test="countyCode != null and countyCode !=''">and county_code = #{countyCode}</if>
+        </where>
+    </select>
+    <select id="getWindPowerPlantTotal" resultType="java.lang.Integer">
+        select count(*)
+        from wind_power_plant
+        <where>
+            <if test="countyCode != null and countyCode !=''">and county_code = #{countyCode}</if>
+        </where>
+    </select>
+    <select id="getFbsgfyhPointDataTotal" resultType="java.lang.Integer">
+        select count(*)
+        from distributed_photovoltaic
+        <where>
+            <if test="countyCode != null and countyCode !=''">and county_code = #{countyCode}</if>
+        </where>
+    </select>
+
+    <select id="getCapacity" resultType="com.hl.analyze.entity.po.InstalledCapacity">
+        SELECT id,
+        city,
+        city_code cityCode,
+        wind_power windPower,
+        photovoltaic_power_centralization photovoltaicPowerCentralization,
+        photovoltaic_power_distributed photovoltaicPowerDistributed,
+        subtotal,
+        biomass_machine biomassMachine,
+        new_energy newEnergy,
+        date,
+        county,
+        county_code countyCode
+        FROM installed_capacity_total
+        <where>
+            <trim prefixOverrides="and">
+                <if test="cityCode != null and cityCode !=''">and city_code = #{cityCode}</if>
+                <if test="countyCode != null and countyCode !=''">and county_code = #{countyCode}</if>
+                <if test=" selectMonth!= null and selectMonth !=''">and date = #{selectMonth}
+                </if>
+            </trim>
+        </where>
+    </select>
+    <select id="getCapacityCountyCode" resultType="com.hl.analyze.entity.po.InstalledCapacity">
+        SELECT id,
+        city,
+        city_code cityCode,
+        wind_power windPower,
+        photovoltaic_power_centralization photovoltaicPowerCentralization,
+        photovoltaic_power_distributed photovoltaicPowerDistributed,
+        subtotal,
+        biomass_machine biomassMachine,
+        new_energy newEnergy,
+        date,
+        county,
+        county_code countyCode
+        FROM installed_capacity
+        <where>
+            <trim prefixOverrides="and">
+                <if test="cityCode != null and cityCode !=''">and city_code = #{cityCode}</if>
+                <if test="countyCode != null and countyCode !=''">and county_code = #{countyCode}</if>
+                <if test=" selectMonth!= null and selectMonth !=''">and date = #{selectMonth}
+                </if>
+            </trim>
+        </where>
+    </select>
+
+    <select id="getPhotovoltaicCountyCode" resultType="com.hl.analyze.entity.po.InstalledCapacity">
+        select id,wind_power windPower,subtotal from installed_capacity
+        <where>
+            <if test="selectMonth != null and selectMonth !=''">and date = #{selectMonth}</if>
+            <if test="cityCode != null and cityCode !=''">and city_code = #{cityCode}</if>
+            <if test="countyCode != null and countyCode !=''">and county_code = #{countyCode}</if>
+        </where>
+    </select>
+
+</mapper>

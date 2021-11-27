@@ -1,0 +1,80 @@
+server:
+  port: 8162
+
+mybatis:
+  mapper-locations:
+    - classpath:mybatis/**/*.xml
+  configuration:
+    map-underscore-to-camel-case: true
+spring:
+  application:
+    name: greenEnergy-8162
+  profiles:
+    active: dev
+  servlet:
+    multipart:
+      max-file-size: 80MB
+      max-request-size: 100MB
+audience:
+  clientId: 098f6bcd4621d373cade4e832627b4f6
+  base64Secret: MDk4ZjZiY2Q0NjIxZDM3M2NhZGU0ZTgzMjYyN2I0ZjY=
+  name: restapiuser
+  expiresSecond: 172800
+  ddlogin: 1      #0开启单点登录   1关闭单点登录
+  max: 3 #同时允许登录个数
+
+eureka:
+  client:   #客户端注册金eureka服务列表内
+    service-url:
+      defaultZone: http://localhost:7001/eureka #http://eureka7001.com:7001/eureka/,http://eureka7002.com:7002/eureka/,http://eureka7003.com:7003/eureka/
+  instance:
+    instance-id: greenEnergy-8162       #服务名称的修改
+    prefer-ip-address: true             #访问路径可以显示IP地址
+
+info:
+  app.name: springcloud
+  company.name: hlkj.com
+  build.artifactId: $project.artifactId$
+  build.version: $project.version$
+
+
+cards:
+  heavy-load:
+    center: BD4E5F9C02A95653E0530253040AB572
+    light-loads:
+      - BD4E5F9C03305653E0530253040AB572
+      - BD4E5F9C04B75653E0530253040AB572
+      - BD4E5F9C044C5653E0530253040AB572
+      - BD4E5F9C032C5653E0530253040AB572
+# 无效了，留着备用
+  customer-needs:
+    center: 211116166988
+    light-loads:
+      - BD4E5F9C03305653E0530253040AB572
+      - BD4E5F9C044C5653E0530253040AB572
+      - BD4E5F9C032C5653E0530253040AB572
+      - BD4E5F9C04B75653E0530253040AB572
+
+  coordinates:
+    ## 用户需求申请ID
+    211116166988:
+      - 116.4431298839228
+      - 37.15915227862871
+    ## 重过载
+    BD4E5F9C02A95653E0530253040AB572:
+      - 116.4431298839228
+      - 37.15915227862871
+    BD4E5F9C03305653E0530253040AB572:
+      - 116.36607817223357
+      - 37.12270639860684
+    BD4E5F9C04B75653E0530253040AB572:
+      - 116.35115121176801
+      - 37.24912765001331
+    BD4E5F9C044C5653E0530253040AB572:
+      - 116.54402890331289
+      - 37.204122702461795
+    BD4E5F9C032C5653E0530253040AB572:
+      - 116.58202107355481
+      - 37.08884773033439
+hlkj:
+  irrigation-power-base-data: "[{\"smooth\":false,\"data\":[{\"label\":\"1月\",\"value\":\"0\"},{\"label\":\"2月\",\"value\":\"0\"},{\"label\":\"3月\",\"value\":\"3000\"},{\"label\":\"4月\",\"value\":\"1800\"},{\"label\":\"5月\",\"value\":\"900\"},{\"label\":\"6月\",\"value\":\"0\"},{\"label\":\"7月\",\"value\":\"0\"},{\"label\":\"8月\",\"value\":\"0\"},{\"label\":\"9月\",\"value\":\"0\"},{\"label\":\"10月\",\"value\":\"1000\"},{\"label\":\"11月\",\"value\":\"500\"},{\"label\":\"12月\",\"value\":\"0\"}]}]"

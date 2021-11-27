@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.hl.analyze.dao.GeneralViewDao">
+
+
+    <select id="getGeoHeatmapData" resultType="com.hl.analyze.entity.bo.HeatMapBO">
+        select ifnull(proportion, 0) * 100 as `value`,
+               district_code org_no,
+               district_name org_name
+        from gv_renewable_energy
+        where district_code is not null
+          and date = (select max(date) from gv_renewable_energy)
+    </select>
+
+    <select id="getQjnygmData" resultType="com.hl.analyze.entity.po.GvRenewableEnergyPO">
+        select id,
+               `date`,
+               `year`,
+               `month`,
+               district_code,
+               district_name,
+               city_code,
+               city_name,
+               wind_power_capacity,
+               central_capacity,
+               distributed_capacity,
+               photovoltaic_capacity,
+               biomass_capacity,
+               new_energy_capacity,
+               wind_generating_power,
+               central_generating_power,
+               distributed_generating_power,
+               photovoltaic_generating_power,
+               biomass_generating_power,
+               new_energy_generating_power,
+               social_electricity_consumption,
+               non_water,
+               non_water_minimum_weight,
+               non_water_incentive_weight,
+               non_water_weight,
+               ifnull(proportion, 0) * 100 proportion
+        from gv_renewable_energy
+        where district_code is null
+          and `date` = (select max(`date`) from gv_renewable_energy)
+    </select>
+
+
+    <select id="getQjnygmDetail" resultType="com.hl.analyze.entity.po.GvRenewableEnergyPO">
+        select district_name,
+               new_energy_capacity,
+               distributed_capacity,
+               central_capacity,
+               wind_power_capacity,
+               ifnull(proportion, 0) * 100 proportion,
+               new_energy_generating_power,
+               distributed_generating_power,
+               social_electricity_consumption
+        from gv_renewable_energy
+        where district_code is not null
+        <choose>
+            <when test="barGraphQuery.time == null or barGraphQuery.time == ''">
+                and `date` = (select max(`date`) from gv_renewable_energy)
+            </when>
+            <otherwise>
+                and `date` = #{barGraphQuery.time}
+            </otherwise>
+        </choose>
+    </select>
+
+    <select id="getQjnyfaqsByAreaCode" resultType="com.hl.analyze.entity.po.GvCleanEnergyPO">
+        select `year`,
+               new_energy_capacity,
+               wind_power_capacity,
+               photovoltaic_capacity,
+               biomass_capacity,
+               thermal_power_capacity,
+               capacity,
+               ifnull(new_energy_capacity_ratio, 0) * 100 new_energy_capacity_ratio,
+               ifnull(wind_power_capacity_ratio, 0) * 100 wind_power_capacity_ratio,
+               ifnull(photovoltaic_capacity_ratio, 0) * 100 photovoltaic_capacity_ratio,
+               ifnull(biomass_capacity_ratio, 0) * 100 biomass_capacity_ratio,
+               ifnull(thermal_power_capacity_ratio, 0) * 100 thermal_power_capacity_ratio,
+               new_energy_generating_power,
+               wind_generating_power,
+               photovoltaic_generating_power,
+               biomass_generating_power,
+               thermal_generating_power,
+               outside_generating_power,
+               social_generating_power,
+               ifnull(power_ratio, 0) * 100 power_ratio,
+               ifnull(wind_power_ratio, 0) * 100 wind_power_ratio,
+               ifnull(photovoltaic_ratio, 0) * 100 photovoltaic_ratio,
+               ifnull(biomass_radio, 0) * 100 biomass_radio,
+               ifnull(thermal_radio, 0) * 100 thermal_radio,
+               ifnull(outside_radio, 0) * 100 outside_radio
+        from gv_clean_energy
+    </select>
+</mapper>

@@ -1,0 +1,39 @@
+{
+  "groups": [
+    {
+      "name": "audience",
+      "type": "com.integration.entity.Audience",
+      "sourceType": "com.integration.entity.Audience"
+    }
+  ],
+  "properties": [
+    {
+      "name": "audience.base64-secret",
+      "type": "java.lang.String",
+      "sourceType": "com.integration.entity.Audience"
+    },
+    {
+      "name": "audience.client-id",
+      "type": "java.lang.String",
+      "sourceType": "com.integration.entity.Audience"
+    },
+    {
+      "name": "audience.dfilter",
+      "type": "java.lang.Integer",
+      "sourceType": "com.integration.entity.Audience",
+      "defaultValue": 0
+    },
+    {
+      "name": "audience.expires-second",
+      "type": "java.lang.Integer",
+      "sourceType": "com.integration.entity.Audience",
+      "defaultValue": 0
+    },
+    {
+      "name": "audience.name",
+      "type": "java.lang.String",
+      "sourceType": "com.integration.entity.Audience"
+    }
+  ],
+  "hints": []
+}

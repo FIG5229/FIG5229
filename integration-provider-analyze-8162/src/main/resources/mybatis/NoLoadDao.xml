@@ -1,0 +1,174 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hl.analyze.dao.NoLoadDao">
+  <resultMap autoMapping="true" id="BaseResultMap" type="com.hl.analyze.entity.po.NoLoad">
+    <!--@mbg.generated-->
+    <!--@Table no_load-->
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="transformer_id" jdbcType="VARCHAR" property="companyName" />
+    <result column="transformer_name" jdbcType="VARCHAR" property="companyCode" />
+    <result column="max_load_rate" jdbcType="VARCHAR" property="reqNumber" />
+    <result column="avg_load_rate" jdbcType="VARCHAR" property="username" />
+    <result column="address" jdbcType="VARCHAR" property="address" />
+    <result column="voltage" jdbcType="VARCHAR" property="voltage" />
+    <result column="type" jdbcType="VARCHAR" property="type" />
+    <result column="req_capacity" jdbcType="INTEGER" property="reqCapacity" />
+    <result column="req_time" jdbcType="TIMESTAMP" property="reqTime" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    <!--@mbg.generated-->
+    id, transformer_id, transformer_name, max_load_rate, avg_load_rate, address, voltage, `type`, req_capacity, req_time
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    <!--@mbg.generated-->
+    select 
+    <include refid="Base_Column_List" />
+    from no_load
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    <!--@mbg.generated-->
+    delete from no_load
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" keyColumn="id" keyProperty="id" parameterType="com.hl.analyze.entity.po.NoLoad" useGeneratedKeys="true">
+    <!--@mbg.generated-->
+    insert into no_load (transformer_id, transformer_name, max_load_rate, avg_load_rate,
+      address, voltage, `type`, 
+      req_capacity, req_time)
+    values (#{companyName,jdbcType=VARCHAR},#{companyCode,jdbcType=VARCHAR} , #{reqNumber,jdbcType=VARCHAR}, #{username,jdbcType=VARCHAR},
+      #{address,jdbcType=VARCHAR}, #{voltage,jdbcType=VARCHAR}, #{type,jdbcType=VARCHAR}, 
+      #{reqCapacity,jdbcType=INTEGER}, #{reqTime,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" keyColumn="id" keyProperty="id" parameterType="com.hl.analyze.entity.po.NoLoad" useGeneratedKeys="true">
+    <!--@mbg.generated-->
+    insert into no_load
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="companyName != null">
+        transformer_id,
+      </if>
+      <if test="companyCode != null">
+        transformer_name,
+      </if>
+      <if test="reqNumber != null">
+        max_load_rate,
+      </if>
+      <if test="username != null">
+        avg_load_rate,
+      </if>
+      <if test="address != null">
+        address,
+      </if>
+      <if test="voltage != null">
+        voltage,
+      </if>
+      <if test="type != null">
+        `type`,
+      </if>
+      <if test="reqCapacity != null">
+        req_capacity,
+      </if>
+      <if test="reqTime != null">
+        req_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="companyName != null">
+        #{companyName,jdbcType=VARCHAR},
+      </if>
+      <if test="companyCode != null">
+        #{companyCode,jdbcType=VARCHAR},
+      </if>
+      <if test="reqNumber != null">
+        #{reqNumber,jdbcType=VARCHAR},
+      </if>
+      <if test="username != null">
+        #{username,jdbcType=VARCHAR},
+      </if>
+      <if test="address != null">
+        #{address,jdbcType=VARCHAR},
+      </if>
+      <if test="voltage != null">
+        #{voltage,jdbcType=VARCHAR},
+      </if>
+      <if test="type != null">
+        #{type,jdbcType=VARCHAR},
+      </if>
+      <if test="reqCapacity != null">
+        #{reqCapacity,jdbcType=INTEGER},
+      </if>
+      <if test="reqTime != null">
+        #{reqTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.hl.analyze.entity.po.NoLoad">
+    <!--@mbg.generated-->
+    update no_load
+    <set>
+      <if test="companyName != null">
+        transformer_id = #{companyName,jdbcType=VARCHAR},
+      </if>
+      <if test="companyCode != null">
+        transformer_name = #{companyCode,jdbcType=VARCHAR},
+      </if>
+      <if test="reqNumber != null">
+        max_load_rate = #{reqNumber,jdbcType=VARCHAR},
+      </if>
+      <if test="username != null">
+        avg_load_rate = #{username,jdbcType=VARCHAR},
+      </if>
+      <if test="address != null">
+        address = #{address,jdbcType=VARCHAR},
+      </if>
+      <if test="voltage != null">
+        voltage = #{voltage,jdbcType=VARCHAR},
+      </if>
+      <if test="type != null">
+        `type` = #{type,jdbcType=VARCHAR},
+      </if>
+      <if test="reqCapacity != null">
+        req_capacity = #{reqCapacity,jdbcType=INTEGER},
+      </if>
+      <if test="reqTime != null">
+        req_time = #{reqTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.hl.analyze.entity.po.NoLoad">
+    <!--@mbg.generated-->
+    update no_load
+    set
+    transformer_id = #{companyName,jdbcType=VARCHAR},
+    transformer_name = #{companyCode,jdbcType=VARCHAR},
+      max_load_rate = #{reqNumber,jdbcType=VARCHAR},
+      avg_load_rate = #{username,jdbcType=VARCHAR},
+      address = #{address,jdbcType=VARCHAR},
+      voltage = #{voltage,jdbcType=VARCHAR},
+      `type` = #{type,jdbcType=VARCHAR},
+      req_capacity = #{reqCapacity,jdbcType=INTEGER},
+      req_time = #{reqTime,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+
+  <select id="selectPage" resultMap="BaseResultMap">
+    SELECT
+    <include refid="Base_Column_List" />
+    FROM no_load
+
+    <where>
+      <if test="id != null">
+        id = #{id,jdbcType=INTEGER}
+      </if>
+      <if test="reqNumber != null and reqNumber != ''">
+        AND max_load_rate = #{reqNumber,jdbcType=VARCHAR}
+      </if>
+      <if test="type != null and type != ''">
+        AND type = #{type,jdbcType=VARCHAR}
+      </if>
+    </where>
+
+
+  </select>
+</mapper>

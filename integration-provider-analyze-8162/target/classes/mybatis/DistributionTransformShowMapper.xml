@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.hl.analyze.dao.DistributionTransformShowDao">
+
+    <select id="getDistributionTransformShowList" resultType="java.util.Map">
+		SELECT
+			unit,
+			area_code AS areaCode,
+			area_name AS areaName,
+			electric_quantity AS electricQuantity
+		FROM
+			distribution_transform_show
+		<where>
+			<if test="unit != null and unit != ''">
+				and unit LIKE concat('%',#{unit},'%')
+			</if>
+		</where>
+	</select>
+</mapper>

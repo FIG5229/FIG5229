@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.hl.analyze.dao.ReturnOnlnvestmentDao">
+
+
+    <select id="getGcxmtxhb" resultType="java.util.Map">
+        SELECT
+        	unit as unit,
+        	project_name as projectName,
+        	returns
+        FROM
+        	return_on_investment
+        ORDER BY returns desc
+    </select>
+    <select id="getGcxmtzpmList" resultType="java.util.Map">
+       SELECT
+	    	unit as unit,
+	    	project_name as projectName,
+	    	fund as fund,
+	    	electric_quantity as electricQuantity,
+	    	returns,
+	    	project_code as projectCode,
+        	YEAR
+		FROM
+		    return_on_investment
+		    <where>
+				<if test="quadrant == 1">
+					fund &gt; 2735441.57 and electric_quantity &gt; 792043.00
+				</if>
+				<if test="quadrant == 2">
+					fund &lt; 2735441.57 and electric_quantity &gt; 792043.00
+				</if>
+				<if test="quadrant == 3">
+					fund &lt; 2735441.57 and electric_quantity &lt; 792043.00
+				</if>
+				<if test="quadrant == 4">
+					fund &gt; 2735441.57 and electric_quantity &lt; 792043.00
+				</if>
+				<if test="projectCode != null and projectCode != ''">
+					project_code LIKE concat('%',#{projectCode},'%')
+				</if>
+				<if test="unit != null and unit != ''">
+					and unit LIKE concat('%',#{unit},'%')
+				</if>
+				<if test="beginFund != null and beginFund != ''">
+					and fund &gt; #{beginFund}
+				</if>
+				<if test="endFund != null and endFund != ''">
+					and fund &lt; #{endFund}
+				</if>
+    	    </where>
+			ORDER BY returns DESC
+    </select>
+	<select id="getQuadrant" resultType="java.util.Map">
+		SELECT
+        	fund as fund,
+	    	electric_quantity as electricQuantity
+        FROM
+        	return_on_investment
+	</select>
+</mapper>

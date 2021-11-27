@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.hl.analyze.dao.ToolDao">
+
+
+    <select id="getAllPhotoAxis" resultType="com.hl.analyze.entity.po.DistributedPhotovoltaic">
+        select id,
+               longitude,
+               latitude,
+               geographic_position
+        from distributed_photovoltaic_new
+        order by id
+        limit ${start}, ${end}
+    </select>
+
+    <select id="getDelId" resultType="int">
+        select id from axisids
+    </select>
+    <select id="getMaxId" resultType="java.lang.Integer">
+        select id from existid
+    </select>
+    <insert id="insertDelId">
+        insert into axisids(id, type) values (#{id}, #{type})
+    </insert>
+    <insert id="insertExistId">
+        insert into existid values (#{id})
+    </insert>
+
+</mapper>

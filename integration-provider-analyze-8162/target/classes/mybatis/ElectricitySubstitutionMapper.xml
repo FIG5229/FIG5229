@@ -1,0 +1,267 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.hl.analyze.dao.ElectricitySubstitutionDao">
+
+    <select id="getOverviewMachine" resultType="java.util.Map">
+        select sort, label, value, unit
+        from es_data_overview
+        where value is not null
+          and type = #{type}
+        order by sort
+    </select>
+
+    <select id="getProjectElectricityConsumption" resultType="java.lang.String">
+        select round(ifnull(sum(pr_total * comprehensive_magnification), 0) / 100000000, 2)
+        from electricity_info
+    </select>
+
+    <select id="getActualCost" resultType="java.lang.String">
+        select round(ifnull(sum(actual_cost), 0) / 100000000, 2) actualCost
+        from motor_pumped
+    </select>
+
+    <select id="getInvestmentMachine" resultType="java.util.Map">
+        select project_year                                  projectYear,
+               round(ifnull(sum(actual_cost), 0) / 10000, 2) actualCost
+        from motor_pumped
+        group by project_year
+    </select>
+
+    <select id="getMachineBenefitAnalysis" resultType="java.util.Map">
+        SELECT fc.project_def                 项目定义,
+               fc.project_desc                项目定义描述,
+               fc.profit_center_desc          利润中心描述,
+               fc.asset_code                  资产编码,
+               fc.device_code                 设备编码,
+               ll.distribu_code               配变编号,
+               ll.station_area_code           台区编号,
+               ll.station_area_name           台区名称,
+               ll.dm_unit                     台区管理单位,
+               ll.delivery_date               投运日期,
+               ei.terminal_code               终端编号,
+               ei.terminal_name               终端名称,
+               ei.terminal_address_code       终端地址码,
+               ei.meter_asset_code            电能表资产编号,
+               ei.record_date                 表码记录时间,
+               ei.pa_total                    正向有功总,
+               ei.ra_total                    反向有功总,
+               ei.comprehensive_magnification 综合倍率,
+               ei.unit_name                   单位名称
+        FROM financial_control fc
+                 join pms_data pd on fc.asset_code = pd.asset_code
+                 join line_loss ll on pd.device_code = ll.distribu_code
+                 join electricity_info ei on ll.station_area_code = ei.station_area_code
+        WHERE 1 = 1
+          and fc.asset_sort_desc = '配电线路及设备-配电设备'
+          and fc.measure_unit = '台'
+        group by fc.device_code
+    </select>
+
+    <select id="getCustomerMonthData" resultType="java.util.Map">
+        select customer_number                                                         customerNumber,
+               cast(ifnull(sum(CASE WHEN date = '2021-01' THEN value END), 0) as char) 1month,
+               cast(ifnull(sum(CASE WHEN date = '2021-02' THEN value END), 0) as char) 2month,
+               cast(ifnull(sum(CASE WHEN date = '2021-03' THEN value END), 0) as char) 3month,
+               cast(ifnull(sum(CASE WHEN date = '2021-04' THEN value END), 0) as char) 4month,
+               cast(ifnull(sum(CASE WHEN date = '2021-05' THEN value END), 0) as char) 5month,
+               cast(ifnull(sum(CASE WHEN date = '2021-06' THEN value END), 0) as char) 6month
+        from customer_month_data
+        group by customer_number
+    </select>
+
+    <select id="getZeroElectricity" resultType="java.util.Map">
+        select customer_number                                           customerNumber,
+               ifnull(sum(CASE WHEN date = '2021-03' THEN value END), 0) 3month,
+               ifnull(sum(CASE WHEN date = '2021-04' THEN value END), 0) 4month,
+               ifnull(sum(CASE WHEN date = '2021-05' THEN value END), 0) 5month
+        from customer_month_data
+        group by customer_number
+        HAVING (3month + 4month + 5month) = 0
+    </select>
+
+    <select id="getIrregularElectricity" resultType="java.util.Map">
+        select customer_number                                           customerNumber,
+               ifnull(sum(CASE WHEN date = '2021-01' THEN value END), 0) 1month,
+               ifnull(sum(CASE WHEN date = '2021-02' THEN value END), 0) 2month,
+               ifnull(sum(CASE WHEN date = '2021-03' THEN value END), 0) 3month,
+               ifnull(sum(CASE WHEN date = '2021-04' THEN value END), 0) 4month,
+               ifnull(sum(CASE WHEN date = '2021-05' THEN value END), 0) 5month,
+               ifnull(sum(CASE WHEN date = '2021-06' THEN value END), 0) 6month
+        from customer_month_data
+        group by customer_number
+        having (1month + 2month + 6month) > (3month + 4month + 5month)
+    </select>
+
+    <select id="getCustInfoOfZeroElectricity" resultType="com.hl.analyze.dto.ZeroElectricityDTO">
+        select
+        ci.id,
+        ci.company_code companyCode,
+        ci.customer_number customerNumber,
+        ci.customer_name customerName,
+        ci.address,
+        ci.county_name countyName,
+        ci.company,
+        concat('[', t2.x, ',', t2.y, ']') axis
+        from customer_info ci
+            left join gds_info t2 on ci.company_code = t2.bzbm
+        where customer_number in
+        <foreach collection="customerNumbers" item="item" index="index" separator="," open="(" close=")">
+            #{item}
+        </foreach>
+
+    </select>
+
+    <select id="getJkdlList" resultType="com.hl.analyze.dto.JkjcListDTO">
+        select id,
+               company dw,
+               power_station gds,
+               customer_number hh,
+               customer_name hm,
+               address dz,
+               city_code cityCode,
+               month1,
+               month2,
+               month3,
+               month4,
+               month5,
+               month6,
+               month7,
+                case
+                    when ((month3 + month4 + month5) = 0 and (month1 + month2 + month6) = 0) then 'ldl'
+                    when (month1 + month2 + month6) > (month3 + month4 + month5) then 'bgl'
+                    else 'normal'
+                    end as type
+        from es_well_info
+        <where>
+            <if test="null != company and '' != company">
+                and company like concat('%',#{company},'%')
+            </if>
+            <if test="null != powerStation and '' != powerStation">
+                and power_station like concat('%',#{powerStation},'%')
+            </if>
+            <if test="null != accountNo and '' != accountNo">
+                and customer_number like concat('%',#{accountNo},'%')
+            </if>
+            <if test="null != accountName and '' != accountName">
+                and customer_name like concat('%',#{accountName},'%')
+            </if>
+            <if test="null != address and '' != address">
+                and address like concat('%',#{address},'%')
+            </if>
+            <choose>
+                <when test="type == 'ldl'">
+                    and (month3 + month4 + month5) = 0 and (month1 + month2 + month6) = 0
+                </when>
+                <when test="type == 'bgl'">
+                    and (month1 + month2 + month6) > (month3 + month4 + month5)
+                </when>
+                <when test="type == 'normal'">
+                    and ((month3 + month4 + month5) != 0) and (month1 + month2 + month6) &lt;= (month3 + month4 + month5)
+                </when>
+                <otherwise>
+                </otherwise>
+            </choose>
+        </where>
+    </select>
+    <select id="getJkdlByCustomerNumberList" resultType="com.hl.analyze.dto.JkjcListDTO">
+        select t.customer_number hh,
+               t.month1,
+               t.month2,
+               t.month3,
+               t.month4,
+               t.month5,
+               t.month6,
+               t.month7,
+               case
+                   when (t.month3 + t.month4 + t.month5) = 0 then 'ldl'
+                   when (t.month1 + t.month2 + t.month6) > (t.month3 + t.month4 + t.month5) then 'bgl'
+                   else 'normal'
+                   end as type
+        from (select customer_number,
+                     ifnull(sum(CASE WHEN date = '2021-01' THEN value END), 0) month1,
+                     ifnull(sum(CASE WHEN date = '2021-02' THEN value END), 0) month2,
+                     ifnull(sum(CASE WHEN date = '2021-03' THEN value END), 0) month3,
+                     ifnull(sum(CASE WHEN date = '2021-04' THEN value END), 0) month4,
+                     ifnull(sum(CASE WHEN date = '2021-05' THEN value END), 0) month5,
+                     ifnull(sum(CASE WHEN date = '2021-06' THEN value END), 0) month6,
+                     ifnull(sum(CASE WHEN date = '2021-07' THEN VALUE END), 0) month7
+              from es_well_month_data
+              where
+                customer_number in
+                <foreach collection="list" item="customerNumber" separator="," open="(" close=")">
+                    #{customerNumber}
+                </foreach>
+              group by customer_number
+            ) t
+    </select>
+
+    <select id="getCompanyAxisByCustomerNumberSet" resultType="java.util.Map">
+        select t1.company_code companyCode,
+               concat('[', t2.x, ',', t2.y, ']') coordinate
+        from customer_info t1
+                 left join gds_info t2 on t1.company_code = t2.bzbm
+        where
+        t1.company_code is not null and
+        <foreach collection="customerNumberSet" open="t1.customer_number in(" item="customerNumber" close=")" separator=",">
+            #{customerNumber}
+        </foreach>
+        group by t1.company_code
+    </select>
+
+    <select id="getYhxqList" resultType="com.hl.analyze.dto.CustomerDemandDTO">
+        select id,
+               customer_name     customerName,
+               address,
+               power_supply_unit companyName,
+               applied_capacity  appliedCapacity
+        from es_customer_demand
+        where power_supply_unit_code = #{companyCode}
+    </select>
+
+    <select id="exportJkjcExcel" resultType="java.util.Map">
+        select t1.id,
+               t1.company,
+               t1.power_station,
+               t1.customer_number,
+               t1.customer_name,
+               t1.address,
+               month1,
+               month2,
+               month3,
+               month4,
+               month5,
+               month6,
+               month7
+
+        from es_well_info t1
+                 left join(select customer_number,
+                                  ifnull(sum(CASE WHEN date = '2021-01' THEN value END), 0) month1,
+                                  ifnull(sum(CASE WHEN date = '2021-02' THEN value END), 0) month2,
+                                  ifnull(sum(CASE WHEN date = '2021-03' THEN value END), 0) month3,
+                                  ifnull(sum(CASE WHEN date = '2021-04' THEN value END), 0) month4,
+                                  ifnull(sum(CASE WHEN date = '2021-05' THEN value END), 0) month5,
+                                  ifnull(sum(CASE WHEN date = '2021-06' THEN value END), 0) month6,
+                                  ifnull(sum(CASE WHEN date = '2021-07' THEN VALUE END), 0) month7
+                           from es_well_month_data
+                           group by customer_number) t2 on t1.customer_number = t2.customer_number
+    </select>
+
+    <select id="getIrrigationPower" resultType="com.hl.analyze.entity.podo.LabelValueDO">
+        select concat(month, '月') label,
+               `value`
+        from es_well_month_data
+        where customer_number = #{customerNumber}
+    </select>
+
+    <select id="getCustomerDemandByCompanyCodeSet" resultType="java.lang.String">
+        select power_supply_unit_code companyCode
+        from es_customer_demand
+        where
+        <foreach collection="companyCodeSet" open="power_supply_unit_code in(" separator="," close=")" item="companyCode">
+            #{companyCode}
+        </foreach>
+    </select>
+
+</mapper>
